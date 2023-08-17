@@ -1,14 +1,22 @@
 const Book = require("../models/books");
 
-exports.getBooks = (req, res, next) => {};
+exports.getBooks = (req, res, next) => {
+  console.log("getBooks");
+};
 /* Renvoie un tableau de tous les livres de la base de
 données */
-exports.getBook = (req, res, next) => {};
+exports.getBook = (req, res, next) => {
+  console.log("getBook");
+};
 /* Renvoie le livre avec l’_id fourni */
-exports.bestRating = (req, res, next) => {};
+exports.bestRating = (req, res, next) => {
+  console.log("bestRating");
+};
 /* Renvoie un tableau des 3 livres de la base de
 données ayant la meilleure note moyenne */
-exports.setImageurl = (req, res, next) => {};
+exports.setImageURL = (req, res, next) => {
+  console.log("SetImageURL");
+};
 /* Capture et enregistre l'image, analyse le livre
 transformé en chaîne de caractères, et l'enregistre
 dans la base de données en définissant
@@ -17,7 +25,9 @@ avec un tableau vide. Remarquez que le corps de la
 demande initiale est vide ; lorsque Multer est ajouté,
 il renvoie une chaîne pour le corps de la demande
 en fonction des données soumises avec le fichier */
-exports.updateBook = (req, res, next) => {};
+exports.updateBook = (req, res, next) => {
+  console.log("updateBook");
+};
 /* Met à jour le livre avec l'_id fourni. Si une image est
 téléchargée, elle est capturée, et l’ImageUrl du livre
 est mise à jour. Si aucun fichier n'est fourni, les
@@ -29,10 +39,14 @@ req.body.book. Notez que le corps de la demande
 initiale est vide ; lorsque Multer est ajouté, il renvoie
 une chaîne du corps de la demande basée sur les
 données soumises avec le fichier */
-exports.deleteBook = (req, res, next) => {};
+exports.deleteBook = (req, res, next) => {
+  console.log("DeleteBook");
+};
 /* Supprime le livre avec l'_id fourni ainsi que l’image
 associée */
-exports.setRating = (req, res, next) => {};
+exports.setRating = (req, res, next) => {
+  console.log("setRating");
+};
 /* Définit la note pour le user ID fourni.
 La note doit être comprise entre 0 et 5.
 L'ID de l'utilisateur et la note doivent être ajoutés au
@@ -41,3 +55,11 @@ noter deux fois le même livre.
 Il n’est pas possible de modifier une note.
 La note moyenne "averageRating" doit être tenue à
 jour, et le livre renvoyé en réponse de la requête */
+
+exports.test = (req, res, next) => {
+  console.log("test");
+  res.writeHead(200, { "Content-Type": "text/plain" });
+  res.end("Ceci est un test book");
+};
+
+/* Fonction test */

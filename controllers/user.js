@@ -1,10 +1,15 @@
 const User = require("../models/users");
+const jwt = require("jsonwebtoken");
 
-exports.signup = (req, res, next) => {};
+exports.signup = (req, res, next) => {
+  console.log("signup");
+};
 /* Hachage du mot de passe de l'utilisateur, ajout de
 l'utilisateur à la base de données. */
 
 exports.login = (req, res, next) => {
+  console.log("login");
+  /*
   User.findOne({ email: req.body.email })
     .then((user) => {
       if (!user) {
@@ -28,8 +33,16 @@ exports.login = (req, res, next) => {
         .catch((error) => res.status(500).json({ error }));
     })
     .catch((error) => res.status(500).json({ error }));
+    */
 };
 /* Vérification des informations d'identification de
 l'utilisateur ; renvoie l’_id de l'utilisateur depuis la
 base de données et un token web JSON signé
 (contenant également l'_id de l'utilisateur). */
+
+exports.test = (req, res, next) => {
+  console.log("test");
+  res.writeHead(200, { "Content-Type": "text/plain" });
+  res.end("Ceci est un test");
+};
+/* Fonction test */
