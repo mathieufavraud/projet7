@@ -4,6 +4,9 @@ const Book = require("./models/books");
 const User = require("./models/users");
 const bookRoutes = require("./routes/book");
 const userRoutes = require("./routes/user");
+
+const Tests = require("./test");
+
 const uri =
   "mongodb+srv://mathieufavraud:x8BtkSbyB54P9X3I@cluster0.thwwrgm.mongodb.net/?retryWrites=true&w=majority";
 const app = express();
@@ -15,6 +18,7 @@ mongoose
 
 app.use("api/books", bookRoutes);
 app.use("api/auth", userRoutes);
+app.use("api/tests", Tests);
 
 app.get("/api/test", (req, res, next) => {
   console.log("une requete !");
@@ -23,7 +27,6 @@ app.get("/api/test", (req, res, next) => {
 });
 
 /*
-
 app.use("api/auth/login", (req, res) => {
   console.log("une requete !");
   res.status(201);
