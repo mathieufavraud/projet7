@@ -1,7 +1,5 @@
 const express = require("express");
 const mongoose = require("mongoose");
-const Book = require("./models/books");
-const User = require("./models/users");
 const bookRoutes = require("./routes/book");
 const userRoutes = require("./routes/user");
 
@@ -16,17 +14,17 @@ mongoose
   .then(() => console.log("Connexion à MongoDB réussie !"))
   .catch(() => console.log("Connexion à MongoDB échouée !"));
 
-app.use("api/books", bookRoutes);
-app.use("api/auth", userRoutes);
-app.use("api/tests", Tests);
+app.use("/api/books", bookRoutes);
+app.use("/api/auth", userRoutes);
+app.use("/api/tests", Tests); //a retirer
 
+/*
 app.get("/api/test", (req, res, next) => {
   console.log("une requete !");
   res.writeHead(200, { "Content-Type": "text/plain" });
   res.end("Ceci est un test");
 });
 
-/*
 app.use("api/auth/login", (req, res) => {
   console.log("une requete !");
   res.status(201);

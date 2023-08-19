@@ -2,12 +2,16 @@ const User = require("../models/users");
 const jwt = require("jsonwebtoken");
 
 exports.signup = (req, res, next) => {
+  res.writeHead(200, { "Content-Type": "text/plain" });
+  res.end("signup");
   console.log("signup");
 };
 /* Hachage du mot de passe de l'utilisateur, ajout de
 l'utilisateur à la base de données. */
 
 exports.login = (req, res, next) => {
+  res.writeHead(200, { "Content-Type": "text/plain" });
+  res.end("login");
   console.log("login");
   /*
   User.findOne({ email: req.body.email })
@@ -41,8 +45,8 @@ base de données et un token web JSON signé
 (contenant également l'_id de l'utilisateur). */
 
 exports.test = (req, res, next) => {
-  console.log("test");
   res.writeHead(200, { "Content-Type": "text/plain" });
-  res.end("Ceci est un test");
+  res.end("test");
+  res.end("test");
 };
 /* Fonction test */
