@@ -27,8 +27,8 @@ exports.createBook = (req, res, next) => {
   delete bookObject._userId;
   const book = new Book({
     ...bookObject,
-    userID: req.auth.userId,
-    imageURL: `${req.protocol}://${req.get("host")}/images/${
+    userId: req.auth.userId,
+    imageUrl: `${req.protocol}://${req.get("host")}/images/${
       req.file.filename
     }`,
   });
