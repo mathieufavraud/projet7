@@ -1,21 +1,41 @@
 const Book = require("../models/books");
 
 exports.getBooks = (req, res, next) => {
-  console.log("getBooks");
+  Book.find()
+    .then((books) => res.status(200).json(books))
+    .catch((error) => res.status(400).json({ error }));
 };
 /* Renvoie un tableau de tous les livres de la base de
 données */
+
 exports.getBook = (req, res, next) => {
-  console.log("getBook");
+  Book.findOne({ _id: req.paras.id })
+    .then((book) => res.status(200).json(book))
+    .catch((error) => res.status(404).json({ error }));
 };
 /* Renvoie le livre avec l’_id fourni */
+
 exports.bestRating = (req, res, next) => {
   console.log("bestRating");
 };
 /* Renvoie un tableau des 3 livres de la base de
 données ayant la meilleure note moyenne */
-exports.setImageURL = (req, res, next) => {
-  console.log("SetImageURL");
+
+exports.createBook = (req, res, next) => {
+  const bookObject = JSON.parse(req.body.book);
+  delete bookObject._id;
+  delete bookObject._userId;
+  const book = new Book({
+    ...bookObject,
+    userID: req.auth.userId,
+    imageURL: `${req.protocol}://${req.get("host")}/images/${
+      req.file.filename
+    }`,
+  });
+  book
+    .save()
+    .then(() => res.status(201).json({ message: "Livre enregistré !" }))
+    .catch((error) => res.status(400).json({ error }));
 };
 /* Capture et enregistre l'image, analyse le livre
 transformé en chaîne de caractères, et l'enregistre
@@ -25,8 +45,33 @@ avec un tableau vide. Remarquez que le corps de la
 demande initiale est vide ; lorsque Multer est ajouté,
 il renvoie une chaîne pour le corps de la demande
 en fonction des données soumises avec le fichier */
+
 exports.updateBook = (req, res, next) => {
-  console.log("updateBook");
+  const bookObject = req.file
+    ? {
+        ...JSON.parse(req.body.thing),
+        imageUrl: `${req.protocol}://${req.get("host")}/images/${
+          req.file.filename
+        }`,
+      }
+    : { ...req.body };
+  delete bookObject._userId;
+  Book.findOne({ _id: req.params.id })
+    .then((book) => {
+      if (book.userId != req.auth.userId) {
+        res.status(401).json({ message: "Modification non autorisée" });
+      } else {
+        Book.updateOne(
+          { _id: req.params.id },
+          { ...bookObject, _id: req.params.id }
+        )
+          .then(() => res.status(200).json({ message: "livre modifié" }))
+          .catch((error) => res.status(401).json({ error }));
+      }
+    })
+    .catch((error) => {
+      res.status(400).json({ error });
+    });
 };
 /* Met à jour le livre avec l'_id fourni. Si une image est
 téléchargée, elle est capturée, et l’ImageUrl du livre
@@ -39,11 +84,15 @@ req.body.book. Notez que le corps de la demande
 initiale est vide ; lorsque Multer est ajouté, il renvoie
 une chaîne du corps de la demande basée sur les
 données soumises avec le fichier */
+
 exports.deleteBook = (req, res, next) => {
-  console.log("DeleteBook");
+  Book.deleteOne({ _id: req.params.id })
+    .then(() => res.status(200).json({ message: "livre supprimé" }))
+    .catch((error) => res.status(400).json({ error }));
 };
 /* Supprime le livre avec l'_id fourni ainsi que l’image
 associée */
+
 exports.setRating = (req, res, next) => {
   console.log("setRating");
 };
@@ -55,4 +104,3 @@ noter deux fois le même livre.
 Il n’est pas possible de modifier une note.
 La note moyenne "averageRating" doit être tenue à
 jour, et le livre renvoyé en réponse de la requête */
-
