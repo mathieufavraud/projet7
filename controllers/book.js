@@ -56,10 +56,3 @@ Il n’est pas possible de modifier une note.
 La note moyenne "averageRating" doit être tenue à
 jour, et le livre renvoyé en réponse de la requête */
 
-exports.test = (req, res, next) => {
-  console.log("test");
-  res.writeHead(200, { "Content-Type": "text/plain" });
-  res.end("Ceci est un test book");
-};
-
-/* Fonction test */
