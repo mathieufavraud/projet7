@@ -1,5 +1,10 @@
 const mongoose = require("mongoose");
 
+const ratingbookSchema = mongoose.Schema({
+  userId: { type: String, required: true }, //identifiant MongoDB unique de l'utilisateur qui a noté le livre
+  grade: { type: Number, required: true }, //note donnée à un livre
+});
+
 const bookSchema = mongoose.Schema({
   userId: { type: String, required: true }, //identifiant MongoDB unique de l'utilisateur qui a créé le livre
   title: { type: String, required: true }, //titre du livre
@@ -7,12 +12,7 @@ const bookSchema = mongoose.Schema({
   imageUrl: { type: String, required: true }, //illustration/couverture du livre
   year: { type: Number, required: true }, //année de publication du livre
   genre: { type: String, required: true }, //genre du livre
-  ratings: [
-    {
-      userId: { type: Number, required: true }, //identifiant MongoDB unique de l'utilisateur qui a noté le livre
-      grade: { type: Number, required: true }, //note donnée à un livre
-    },
-  ],
+  ratings: { type: [ratingbookSchema], required: true }, //note du livre
   averageRating: { type: Number, required: true }, //note moyenne du livre
 });
 

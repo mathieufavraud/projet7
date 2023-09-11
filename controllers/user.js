@@ -47,5 +47,3 @@ exports.login = (req, res, next) => {
 l'utilisateur ; renvoie l’_id de l'utilisateur depuis la
 base de données et un token web JSON signé
 (contenant également l'_id de l'utilisateur). */
-
-//rajouter verification de la validité de l'adresse mail ???

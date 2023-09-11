@@ -1,15 +1,16 @@
 const Book = require("../models/books");
+//const Rating = require("./models/books");
 
 exports.getBooks = (req, res, next) => {
   Book.find()
-    .then((books) => res.status(200).json(books))
+    .then((book) => res.status(200).json(book))
     .catch((error) => res.status(400).json({ error }));
 };
 /* Renvoie un tableau de tous les livres de la base de
 données */
 
 exports.getBook = (req, res, next) => {
-  Book.findOne({ _id: req.paras.id })
+  Book.findOne({ _id: req.params.id })
     .then((book) => res.status(200).json(book))
     .catch((error) => res.status(404).json({ error }));
 };
@@ -94,7 +95,21 @@ exports.deleteBook = (req, res, next) => {
 associée */
 
 exports.setRating = (req, res, next) => {
-  console.log("setRating");
+  const rating = new Rating({
+    userId: req.params.id,
+    rating: req.params.rating,
+  });
+  Book.findOne({ _id: req.params.id })
+    .then((book) => {
+      if (book.userId != req.auth.userId) {
+        res.status(401).json({ message: "modification non autorisée" });
+      } else {
+        Book.updateOne({ ...rating })
+          .then(() => res.status(200).json({ book }))
+          .catch((error) => res.status(400).json({ error }));
+      }
+    })
+    .catch((error) => res.status(404).json({ error }));
 };
 /* Définit la note pour le user ID fourni.
 La note doit être comprise entre 0 et 5.

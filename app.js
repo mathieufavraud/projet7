@@ -29,5 +29,8 @@ app.use((req, res, next) => {
 app.use("/images", express.static(path.join(__dirname, "images")));
 app.use("/api/books", bookRoutes);
 app.use("/api/auth", userRoutes);
+app.use("*", (req, res) =>
+  res.status(501).json({ error: "Cette URL n'existe pas" })
+);
 
 module.exports = app;
