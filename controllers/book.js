@@ -17,7 +17,12 @@ exports.getBook = (req, res, next) => {
 /* Renvoie le livre avec l’_id fourni */
 
 exports.bestRating = (req, res, next) => {
-  console.log("bestRating");
+  Book.find()
+    .then((book) => {
+      book.sort({ averageRating: 1 }).limit(3);
+      res.status(200).json(book);
+    })
+    .catch((error) => res.status(400).json({ error }));
 };
 /* Renvoie un tableau des 3 livres de la base de
 données ayant la meilleure note moyenne */
