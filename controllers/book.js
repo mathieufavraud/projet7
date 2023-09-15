@@ -1,4 +1,5 @@
 const Book = require("../models/books");
+const fs = require("fs");
 //const Rating = require("./models/books");
 
 exports.getBooks = (req, res, next) => {
@@ -18,8 +19,9 @@ exports.getBook = (req, res, next) => {
 
 exports.bestRating = (req, res, next) => {
   Book.find()
+    .sort({ averageRating: -1 })
+    .limit(3)
     .then((book) => {
-      book.sort({ averageRating: 1 }).limit(3);
       res.status(200).json(book);
     })
     .catch((error) => res.status(400).json({ error }));
@@ -92,26 +94,50 @@ une chaîne du corps de la demande basée sur les
 données soumises avec le fichier */
 
 exports.deleteBook = (req, res, next) => {
-  Book.deleteOne({ _id: req.params.id })
-    .then(() => res.status(200).json({ message: "livre supprimé" }))
-    .catch((error) => res.status(400).json({ error }));
+  Book.findOne({ _id: req.params.id }).then((book) => {
+    const url = book.imageUrl.split("/").slice(1);
+    fs.unlink(`images/${url[3]}`, (error) => {
+      if (error) {
+        console.log(error);
+      } else {
+        Book.deleteOne({ _id: req.params.id })
+          .then(() => {
+            res.status(200).json({ message: "livre supprimé" });
+          })
+          .catch((error) => res.status(400).json({ error }));
+      }
+    });
+  });
 };
 /* Supprime le livre avec l'_id fourni ainsi que l’image
 associée */
 
 exports.setRating = (req, res, next) => {
-  const rating = new Rating({
-    userId: req.params.id,
-    rating: req.params.rating,
-  });
   Book.findOne({ _id: req.params.id })
     .then((book) => {
-      if (book.userId != req.auth.userId) {
-        res.status(401).json({ message: "modification non autorisée" });
+      const newRating = [
+        { userId: `${req.params.id}`, grade: `${req.body.rating}` },
+      ];
+      book.ratings.push(...newRating);
+      let sum = 0;
+      for (let i = 0; i < book.ratings.length; i++) {
+        sum = sum + book.ratings[i].grade;
+      }
+      book.averageRating = parseInt(sum / book.ratings.length);
+      if (book.ratings.some((rating) => req.params.id === rating.userId)) {
+        console.log("livre deja noté");
+        res.status(403).json({ message: "vous avez déja noté ce livre" });
       } else {
-        Book.updateOne({ ...rating })
-          .then(() => res.status(200).json({ book }))
-          .catch((error) => res.status(400).json({ error }));
+        console.log("livre noté");
+        console.log(book);
+        book
+          .save()
+          .then((book) => {
+            res.status(200).json(book);
+          })
+          .catch((error) => {
+            res.status(400).json({ error });
+          });
       }
     })
     .catch((error) => res.status(404).json({ error }));
@@ -124,3 +150,6 @@ noter deux fois le même livre.
 Il n’est pas possible de modifier une note.
 La note moyenne "averageRating" doit être tenue à
 jour, et le livre renvoyé en réponse de la requête */
+
+//passage de la note entière n'est pas satisfaisant
+//rajouter un test ne fonctionne pas

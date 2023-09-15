@@ -1,5 +1,5 @@
 const multer = require("multer");
-const sharp = require("sharp");
+//const sharp = require("sharp");
 //const fs = require("fs");
 
 const MIME_TYPES = {
@@ -11,11 +11,11 @@ const MIME_TYPES = {
 //const data = await sharp(file).webp().toBuffer();
 
 const storage = multer.diskStorage({
-  destination: (req, data, callback) => {
+  destination: (req, file, callback) => {
     callback(null, "images");
   },
-  filename: (req, data, callback) => {
-    const name = data.originalname.split(" ").join("_");
+  filename: (req, file, callback) => {
+    const name = file.originalname.split(" ").join("_");
     const extension = MIME_TYPES[file.mimetype];
     callback(null, name + Date.now() + "." + extension);
   },
