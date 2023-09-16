@@ -152,4 +152,4 @@ La note moyenne "averageRating" doit être tenue à
 jour, et le livre renvoyé en réponse de la requête */
 
 //passage de la note entière n'est pas satisfaisant
-//rajouter un test ne fonctionne pas
+//le test avec some() ne fonctionne pas ?
