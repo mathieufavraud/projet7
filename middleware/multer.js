@@ -19,5 +19,3 @@ const storage = multer.diskStorage({
 });
 
 module.exports = multer({ storage: storage }).single("image");
-
-// pourquoi pas de next() ?

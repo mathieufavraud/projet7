@@ -9,14 +9,13 @@ const compression = (req, res, next) => {
     .webp()
     .toFile(output)
     .then(() => {
-      console.log("conversion reussie");
-      /*
+      //console.log(input);
+      //console.log(output);
       fs.unlink(input, (error) => {
         if (error) {
           console.log(error);
         }
       });
-      */
     })
     .catch((error) => console.log(error));
   req.file.path = output;
@@ -26,5 +25,4 @@ const compression = (req, res, next) => {
 
 module.exports = compression;
 
-//verification avant le fs unlink ?
-//suppression en asychrone ?
+//retirer extension
