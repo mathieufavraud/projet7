@@ -94,23 +94,27 @@ une chaîne du corps de la demande basée sur les
 données soumises avec le fichier */
 
 exports.deleteBook = (req, res, next) => {
-  Book.findOne({ _id: req.params.id }).then((book) => {
-    const url = book.imageUrl.split("/").slice(1);
-    fs.unlink(`images/${url[3]}`, (error) => {
-      if (error) {
-        console.log(error);
-      } else {
-        Book.deleteOne({ _id: req.params.id })
-          .then(() => {
-            res.status(200).json({ message: "livre supprimé" });
-          })
-          .catch((error) => res.status(400).json({ error }));
-      }
-    });
-  });
+  Book.findOne({ _id: req.params.id })
+    .then((book) => {
+      Book.deleteOne({ _id: req.params.id })
+        .then(() => {
+          res.status(200).json({ message: "livre supprimé" });
+          const url = book.imageUrl.split("/").slice(1);
+          fs.unlink(`images/${url[3]}`, (error) => {
+            if (error) {
+              console.log(error);
+            }
+          });
+        })
+        .catch((error) => res.status(400).json({ error }));
+    })
+    .catch((error) => res.status(400).json({ error }));
 };
 /* Supprime le livre avec l'_id fourni ainsi que l’image
 associée */
+const Rating = (rating, id) => {
+  return rating === id;
+};
 
 exports.setRating = (req, res, next) => {
   Book.findOne({ _id: req.params.id })
@@ -124,8 +128,9 @@ exports.setRating = (req, res, next) => {
         sum = sum + book.ratings[i].grade;
       }
       book.averageRating = parseInt(sum / book.ratings.length);
-      if (book.ratings.some((rating) => req.params.id === rating.userId)) {
+      if (book.ratings.userId.some(Rating(rating, req.params.id))) {
         console.log("livre deja noté");
+        //renvoyer le livre quand même ?
         res.status(403).json({ message: "vous avez déja noté ce livre" });
       } else {
         console.log("livre noté");
@@ -153,3 +158,36 @@ jour, et le livre renvoyé en réponse de la requête */
 
 //passage de la note entière n'est pas satisfaisant
 //le test avec some() ne fonctionne pas ?
+
+/*
+Book.findOne({ _id: req.params.id })
+    .then((book) => {
+      const newRating = [
+        { userId: `${req.params.id}`, grade: `${req.body.rating}` },
+      ];
+      book.ratings.push(...newRating);
+      let sum = 0;
+      for (let i = 0; i < book.ratings.length; i++) {
+        sum = sum + book.ratings[i].grade;
+      }
+      book.averageRating = parseInt(sum / book.ratings.length);
+      console.log(req.params.id);
+      console.log(rating.userId);
+      if (book.ratings.some((rating) => req.params.id === rating.userId)) {
+        console.log("livre deja noté");
+        res.status(403).json({ message: "vous avez déja noté ce livre" });
+      } else {
+        console.log("livre noté");
+        console.log(book);
+        book
+          .save()
+          .then((book) => {
+            res.status(200).json(book);
+          })
+          .catch((error) => {
+            res.status(400).json({ error });
+          });
+      }
+    })
+    .catch((error) => res.status(404).json({ error }));
+    */
