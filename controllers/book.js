@@ -112,29 +112,22 @@ exports.deleteBook = (req, res, next) => {
 };
 /* Supprime le livre avec l'_id fourni ainsi que l’image
 associée */
-const Rating = (rating, id) => {
-  return rating === id;
-};
 
 exports.setRating = (req, res, next) => {
   Book.findOne({ _id: req.params.id })
     .then((book) => {
-      const newRating = [
-        { userId: `${req.params.id}`, grade: `${req.body.rating}` },
-      ];
-      book.ratings.push(...newRating);
-      let sum = 0;
-      for (let i = 0; i < book.ratings.length; i++) {
-        sum = sum + book.ratings[i].grade;
-      }
-      book.averageRating = parseInt(sum / book.ratings.length);
-      if (book.ratings.userId.some(Rating(rating, req.params.id))) {
-        console.log("livre deja noté");
-        //renvoyer le livre quand même ?
-        res.status(403).json({ message: "vous avez déja noté ce livre" });
-      } else {
-        console.log("livre noté");
-        console.log(book);
+      if (
+        book.ratings.find((id) => id.userId === req.params.id) === undefined
+      ) {
+        const newRating = [
+          { userId: `${req.params.id}`, grade: `${req.body.rating}` },
+        ];
+        book.ratings.push(...newRating);
+        let sum = 0;
+        for (let i = 0; i < book.ratings.length; i++) {
+          sum = sum + book.ratings[i].grade;
+        }
+        book.averageRating = Math.round(sum / book.ratings.length);
         book
           .save()
           .then((book) => {
@@ -143,6 +136,8 @@ exports.setRating = (req, res, next) => {
           .catch((error) => {
             res.status(400).json({ error });
           });
+      } else {
+        res.status(401).json(book);
       }
     })
     .catch((error) => res.status(404).json({ error }));
@@ -155,39 +150,3 @@ noter deux fois le même livre.
 Il n’est pas possible de modifier une note.
 La note moyenne "averageRating" doit être tenue à
 jour, et le livre renvoyé en réponse de la requête */
-
-//passage de la note entière n'est pas satisfaisant
-//le test avec some() ne fonctionne pas ?
-
-/*
-Book.findOne({ _id: req.params.id })
-    .then((book) => {
-      const newRating = [
-        { userId: `${req.params.id}`, grade: `${req.body.rating}` },
-      ];
-      book.ratings.push(...newRating);
-      let sum = 0;
-      for (let i = 0; i < book.ratings.length; i++) {
-        sum = sum + book.ratings[i].grade;
-      }
-      book.averageRating = parseInt(sum / book.ratings.length);
-      console.log(req.params.id);
-      console.log(rating.userId);
-      if (book.ratings.some((rating) => req.params.id === rating.userId)) {
-        console.log("livre deja noté");
-        res.status(403).json({ message: "vous avez déja noté ce livre" });
-      } else {
-        console.log("livre noté");
-        console.log(book);
-        book
-          .save()
-          .then((book) => {
-            res.status(200).json(book);
-          })
-          .catch((error) => {
-            res.status(400).json({ error });
-          });
-      }
-    })
-    .catch((error) => res.status(404).json({ error }));
-    */

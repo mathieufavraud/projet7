@@ -3,14 +3,13 @@ const fs = require("fs");
 
 const compression = (req, res, next) => {
   const input = `images/${req.file.filename}`;
-  const output = `images/${req.file.filename}.webp`;
+  const name = req.file.filename.split(".")[0] + ".webp";
+  const output = `images/${name}`;
 
   sharp(input)
     .webp()
     .toFile(output)
     .then(() => {
-      //console.log(input);
-      //console.log(output);
       fs.unlink(input, (error) => {
         if (error) {
           console.log(error);
@@ -18,11 +17,10 @@ const compression = (req, res, next) => {
       });
     })
     .catch((error) => console.log(error));
+
   req.file.path = output;
-  req.file.filename += ".webp";
+  req.file.filename = name;
   next();
 };
 
 module.exports = compression;
-
-//retirer extension
