@@ -9,11 +9,13 @@ const uri =
 const app = express();
 app.use(express.json());
 
+//connection base de données
 mongoose
   .connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log("Connexion à MongoDB réussie !"))
   .catch(() => console.log("Connexion à MongoDB échouée !"));
 
+//gestion du CORS
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader(
@@ -26,6 +28,8 @@ app.use((req, res, next) => {
   );
   next();
 });
+
+//importation des routes
 app.use("/images", express.static(path.join(__dirname, "images")));
 app.use("/api/books", bookRoutes);
 app.use("/api/auth", userRoutes);

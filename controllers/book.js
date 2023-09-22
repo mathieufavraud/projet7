@@ -1,6 +1,5 @@
 const Book = require("../models/books");
 const fs = require("fs");
-//const Rating = require("./models/books");
 
 exports.getBooks = (req, res, next) => {
   Book.find()
@@ -57,7 +56,7 @@ en fonction des données soumises avec le fichier */
 exports.updateBook = (req, res, next) => {
   const bookObject = req.file
     ? {
-        ...JSON.parse(req.body.thing),
+        ...JSON.parse(req.body.book),
         imageUrl: `${req.protocol}://${req.get("host")}/images/${
           req.file.filename
         }`,
@@ -69,6 +68,12 @@ exports.updateBook = (req, res, next) => {
       if (book.userId != req.auth.userId) {
         res.status(401).json({ message: "Modification non autorisée" });
       } else {
+        const url = book.imageUrl.split("/").slice(1);
+        fs.unlink(`images/${url[3]}`, (error) => {
+          if (error) {
+            console.log(error);
+          }
+        });
         Book.updateOne(
           { _id: req.params.id },
           { ...bookObject, _id: req.params.id }
@@ -150,3 +155,12 @@ noter deux fois le même livre.
 Il n’est pas possible de modifier une note.
 La note moyenne "averageRating" doit être tenue à
 jour, et le livre renvoyé en réponse de la requête */
+
+/*
+      const url = book.imageUrl.split("/").slice(1);
+          fs.unlink(`images/${url[3]}`, (error) => {
+            if (error) {
+              console.log(error);
+            }
+          });
+*/

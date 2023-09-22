@@ -12,9 +12,12 @@ const normalizePort = (val) => {
   }
   return false;
 };
+
+//recuperation port a partir d'une variable d'environnement
 const port = normalizePort(process.env.PORT || "4000");
 app.set("port", port);
 
+//gestion erreurs
 const errorHandler = (error) => {
   if (error.syscall !== "listen") {
     throw error;
@@ -36,6 +39,7 @@ const errorHandler = (error) => {
   }
 };
 
+//initialisation serveur
 const server = http.createServer(app);
 
 server.on("error", errorHandler);
@@ -46,8 +50,3 @@ server.on("listening", () => {
 });
 
 server.listen(port);
-
-//server.listen(4000);
-
-//mathieufavraud
-//x8BtkSbyB54P9X3I

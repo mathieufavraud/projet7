@@ -1,10 +1,12 @@
 const mongoose = require("mongoose");
 
+//sous modèle de note
 const ratingbookSchema = mongoose.Schema({
   userId: { type: String, required: true }, //identifiant MongoDB unique de l'utilisateur qui a noté le livre
   grade: { type: Number, required: true }, //note donnée à un livre
 });
 
+//modèle de livre
 const bookSchema = mongoose.Schema({
   userId: { type: String, required: true }, //identifiant MongoDB unique de l'utilisateur qui a créé le livre
   title: { type: String, required: true }, //titre du livre

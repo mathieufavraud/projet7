@@ -5,6 +5,7 @@ const multer = require("../middleware/multer");
 const compression = require("../middleware/sharp");
 const bookCtrl = require("../controllers/book");
 
+//routes pour la gestion des livres
 router.get("/", bookCtrl.getBooks); //affichage de la liste des livres
 router.get("/bestrating", bookCtrl.bestRating); //affichage des trois meilleurs livres
 router.get("/:id", bookCtrl.getBook); //affichage du livre avec l'id
