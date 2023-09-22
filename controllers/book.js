@@ -155,12 +155,3 @@ noter deux fois le même livre.
 Il n’est pas possible de modifier une note.
 La note moyenne "averageRating" doit être tenue à
 jour, et le livre renvoyé en réponse de la requête */
-
-/*
-      const url = book.imageUrl.split("/").slice(1);
-          fs.unlink(`images/${url[3]}`, (error) => {
-            if (error) {
-              console.log(error);
-            }
-          });
-*/
