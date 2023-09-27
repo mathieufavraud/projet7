@@ -1,11 +1,11 @@
+require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
 const bookRoutes = require("./routes/book");
 const userRoutes = require("./routes/user");
 const path = require("path");
 
-const uri =
-  "mongodb+srv://mathieufavraud:x8BtkSbyB54P9X3I@cluster0.thwwrgm.mongodb.net/?retryWrites=true&w=majority";
+const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@${process.env.DB_HOST}/?retryWrites=true&w=majority`;
 const app = express();
 app.use(express.json());
 
